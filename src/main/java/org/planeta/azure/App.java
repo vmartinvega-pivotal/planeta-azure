@@ -2,6 +2,7 @@ package org.planeta.azure;
 
 import java.sql.Connection;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.DriverManager;
@@ -28,6 +29,7 @@ public class App {
             ResultSet resultSet = statement.executeQuery(selectSql)) {
             	String output;
             	String columnValue = "";
+            	SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             	ResultSetMetaData rsmd = resultSet.getMetaData();
     			int numberOfColumns = rsmd.getColumnCount();
             	
@@ -43,9 +45,14 @@ public class App {
     					catch (Exception e){
     						columnValue = (String) resultSet.getObject(i);
     					}
+    					
+    					//Oracle has the DATE data type (SQL Server has date and datetime)
+						//The range for Oracle DATE is January 1, 4712 BCE through December 31, 4712 CE 
+						if (rsmd.getColumnTypeName(i) == "DATE" || rsmd.getColumnTypeName(i) == "TIMESTAMP" ){
+							columnValue = df.format(resultSet.getTimestamp(i));
+						}
 
-    					if (columnValue != null)
-    					{
+    					if (columnValue != null){
     						//Filter out \ and | from the columnValue for not null records.  the rest will default to "null"
     						columnValue = columnValue.replace("\\", "\\\\");
     						columnValue = columnValue.replace("|", "\\|");
@@ -54,10 +61,12 @@ public class App {
     						columnValue = columnValue.replace("\0", "");
     					}
 
-    					if (i == 1)
+    					if (i == 1) {
     						output = columnValue;
-    					else
+    					}
+    					else {
     						output = output + "|" + columnValue;
+    					}
     				}
 
     				System.out.println(output);
