@@ -2,10 +2,10 @@
 
 Code to create a external table to access Azure sql server.
 
-### Compile
-These are the steps to compile the code.
+### Install
+These are the steps to install the software.
 
-* Compile
+* Compile the application
 ```
 mvn clean install
 ```
@@ -14,35 +14,22 @@ mvn clean install
 cp target/planeta-azure-1.0.0.jar /usr/local/os/jar/planeta-azure-1.0.0.jar
 cp jar/mssql-jdbc-7.0.0.jre8.jar /usr/local/os/jar/mssql-jdbc-7.0.0.jre8.jar
 ```
-
-### App Parameters
-Parameters to be set up in the app to create the external table.
-* server
+* Copy the external.sh file
 ```
-dynamicsplanetasqldev.database.windows.net
+cp scripts/external.sh /home/gpadmin/external.sh
+chmod +x /home/gpadmin/external.sh 
 ```
-* database
+* Update the table os.ext_connection
 ```
-dynpre_db
+psql -f scripts/install.sql
 ```
-* user
+* Add a new connection. The type for the connection MUST be 'azure'
 ```
-DYNadmin
+INSERT INTO os.ext_connection (type,server_name,database_name, user_name, pass) 
+VALUES 
+('azure', 'dynamicsplaneta-talend-sql.database.windows.net', 'Dyn_vd_talend_db', 'BitalentUser', 'PASSWORD');
 ```
-* password
-```
-*****
-```
-* query
-```
-"select distinct id from fax"
-```
-
-* Execution example
-```
-java -classpath /usr/local/os/jar/planeta-azure-1.0.0.jar:/usr/local/os/jar/mssql-jdbc-7.0.0.jre8.jar -Xms128m -Xmx256m org.planeta.azure.App dynamicsplanetasqldev.database.windows.net dynpre_db DYNadmin ***** "select distinct id from fax"
-```
-
+* Get the id from the connection inserted
 
 ### External table creation
 
@@ -52,6 +39,6 @@ CREATE EXTERNAL WEB TABLE dweae.ext_test_vicente
 (
   fax_id text
 )
- EXECUTE E'java -classpath /usr/local/os/jar/planeta-azure-1.0.0.jar:/usr/local/os/jar/mssql-jdbc-7.0.0.jre8.jar -Xms128m -Xmx256m org.planeta.azure.App dynamicsplanetasqldev.database.windows.net dynpre_db DYNadmin ***** "select distinct id from fax"' ON MASTER 
+ EXECUTE E'/home/gpadmin/external.sh CONNECTION_ID "select distinct id from fax"' ON MASTER 
  FORMAT 'text' (delimiter '|' null 'null' escape '\\') ENCODING 'UTF8';
 ```
