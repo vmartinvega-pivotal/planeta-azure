@@ -60,11 +60,11 @@ CONNECTION_TYPE=$(trim $CONNECTION_TYPE)
 # Checks the conneciton type
 #
 CONNECTION_TYPE=$(toLowerCase $CONNECTION_TYPE)
-if ! [[ $CONNECTION_TYPE = "azure" ]]
+if [[ $CONNECTION_TYPE = "azure" ]] || [[ $CONNECTION_TYPE = "postgres" ]]
 then
-        logMessageAndExist "ERROR: The Connection Type: $CONNECTION_TYPE is not supported. Only azure is supported. Existing..."
-else
         logMessage "DEBUG: CONNECTION_TYPE: $CONNECTION_TYPE"
+else
+        logMessageAndExist "ERROR: The Connection Type: $CONNECTION_TYPE is not supported. Only azure is supported. Existing..."
 fi
 
 SERVER=$(cat $TEMP_FILE | cut -d"|" -f3)
@@ -73,6 +73,11 @@ INSTANCE=$(cat $TEMP_FILE | cut -d"|" -f4)
 INSTANCE=$(trim $INSTANCE)
 PORT=$(cat $TEMP_FILE | cut -d"|" -f5)
 PORT=$(trim $PORT)
+# To avoid issues with the input params to the app
+if [[ $CONNECTION_TYPE = "postgres" ]]
+then
+        PORT="-1"
+fi
 DATABASE=$(cat $TEMP_FILE | cut -d"|" -f6)
 DATABASE=$(trim $DATABASE)
 USER=$(cat $TEMP_FILE | cut -d"|" -f7)
@@ -95,4 +100,6 @@ java    -classpath /usr/local/os/jar/planeta-azure-1.0.0.jar:/usr/local/os/jar/m
         $DATABASE \
         $USER \
         $PASSWORD \
-        "$IN_QUERY"
+        "$IN_QUERY" \
+        $CONNECTION_TYPE \
+        $PORT

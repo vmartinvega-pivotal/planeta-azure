@@ -5,9 +5,13 @@ import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
 import java.sql.DriverManager;
 
 public class App {
+	
+	private static final String AZURE = "azure";
+	private static final String POSTGRES = "postgres";
 
     public static void main(String[] args) {
 
@@ -16,10 +20,17 @@ public class App {
     	String user = args[2];
     	String password = args[3];
         String selectSql = args[4];
-         
-        String url = String.format("jdbc:sqlserver://%s:1433;database=%s;user=%s;password=%s;encrypt=true;"
-            + "hostNameInCertificate=*.database.windows.net;loginTimeout=30;", hostName, dbName, user, password);
+        String driver = args[5];
+        String port = args[6];
         
+        String url = null;
+        if (driver.toLowerCase().equals(AZURE)) {
+        	url = String.format("jdbc:sqlserver://%s:1433;database=%s;user=%s;password=%s;encrypt=true;"
+                    + "hostNameInCertificate=*.database.windows.net;loginTimeout=30;", hostName, dbName, user, password);
+        }else if (driver.toLowerCase().equals(POSTGRES)) {
+        	url = String.format("jdbc:postgresql://%s:%s/%s", hostName, port, dbName);
+        }
+
         Connection connection = null;
 
         try {
@@ -71,11 +82,17 @@ public class App {
 
     				System.out.println(output);
                 }
-                connection.close();
             }
         }
         catch (Exception e) {
             e.printStackTrace();
+        }finally {
+        	if (connection != null) {
+        		try {
+					connection.close();
+				} catch (SQLException e) {
+				}
+        	}
         }
     }
 }

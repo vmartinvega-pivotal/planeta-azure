@@ -13,6 +13,7 @@ mvn clean install
 ```
 cp target/planeta-azure-1.0.0.jar /usr/local/os/jar/planeta-azure-1.0.0.jar
 cp jar/mssql-jdbc-7.0.0.jre8.jar /usr/local/os/jar/mssql-jdbc-7.0.0.jre8.jar
+cp jar/postgresql-42.2.9.jar /usr/local/os/jar/postgresql-42.2.9.jar
 ```
 * Copy the external.sh file
 ```
