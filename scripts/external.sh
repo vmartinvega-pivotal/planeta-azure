@@ -60,11 +60,11 @@ CONNECTION_TYPE=$(trim $CONNECTION_TYPE)
 # Checks the conneciton type
 #
 CONNECTION_TYPE=$(toLowerCase $CONNECTION_TYPE)
-if [[ $CONNECTION_TYPE = "azure" ]] || [[ $CONNECTION_TYPE = "postgres" ]]
+if [[ $CONNECTION_TYPE = "azure" ]] || [[ $CONNECTION_TYPE = "greenplum" ]]
 then
         logMessage "DEBUG: CONNECTION_TYPE: $CONNECTION_TYPE"
 else
-        logMessageAndExist "ERROR: The Connection Type: $CONNECTION_TYPE is not supported. Only azure is supported. Existing..."
+        logMessageAndExist "ERROR: The Connection Type: $CONNECTION_TYPE is not supported. Only azure or greenplum are supported. Existing..."
 fi
 
 SERVER=$(cat $TEMP_FILE | cut -d"|" -f3)
@@ -73,8 +73,7 @@ INSTANCE=$(cat $TEMP_FILE | cut -d"|" -f4)
 INSTANCE=$(trim $INSTANCE)
 PORT=$(cat $TEMP_FILE | cut -d"|" -f5)
 PORT=$(trim $PORT)
-# To avoid issues with the input params to the app
-if [[ $CONNECTION_TYPE = "postgres" ]]
+if [[ $CONNECTION_TYPE = "azure" ]]
 then
         PORT="-1"
 fi
@@ -84,15 +83,15 @@ USER=$(cat $TEMP_FILE | cut -d"|" -f7)
 USER=$(trim $USER)
 PASSWORD=$(cat $TEMP_FILE | cut -d"|" -f8)
 PASSWORD=$(trim $PASSWORD)
-
 logMessage "DEBUG: Server: $SERVER"
 logMessage "DEBUG: Database: $DATABASE"
 logMessage "DEBUG: Query: $IN_QUERY"
 logMessage "DEBUG: User: $USER"
-logMessage "DEBUG: Pass: $PASSWORD"
+logMessage "DEBUG: Pass:*****"
+logMessage "DEBUG: Port:$PORT"
 removeTempFile $TEMP_FILE
 
-java    -classpath /usr/local/os/jar/planeta-azure-1.0.0.jar:/usr/local/os/jar/mssql-jdbc-7.0.0.jre8.jar \
+java    -classpath /usr/local/os/jar/planeta-azure-1.0.0.jar:/usr/local/os/jar/mssql-jdbc-7.0.0.jre8.jar:/usr/local/os/jar/postgresql-42.2.9.jar \
         -Xms128m \
         -Xmx256m \
         org.planeta.azure.App \

@@ -11,7 +11,7 @@ import java.sql.DriverManager;
 public class App {
 	
 	private static final String AZURE = "azure";
-	private static final String POSTGRES = "postgres";
+	private static final String GREENPLUM = "greenplum";
 
     public static void main(String[] args) {
 
@@ -27,7 +27,7 @@ public class App {
         if (driver.toLowerCase().equals(AZURE)) {
         	url = String.format("jdbc:sqlserver://%s:1433;database=%s;user=%s;password=%s;encrypt=true;"
                     + "hostNameInCertificate=*.database.windows.net;loginTimeout=30;", hostName, dbName, user, password);
-        }else if (driver.toLowerCase().equals(POSTGRES)) {
+        }else if (driver.toLowerCase().equals(GREENPLUM)) {
         	url = String.format("jdbc:postgresql://%s:%s/%s", hostName, port, dbName);
         }
 

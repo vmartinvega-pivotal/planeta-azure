@@ -29,6 +29,9 @@ psql -f scripts/install.sql
 INSERT INTO os.ext_connection (type,server_name,database_name, user_name, pass) 
 VALUES 
 ('azure', 'dynamicsplaneta-talend-sql.database.windows.net', 'Dyn_vd_talend_db', 'BitalentUser', 'PASSWORD');
+INSERT INTO os.ext_connection (type,server_name,database_name, user_name, pass, port) 
+VALUES 
+('greenplum2', '10.18.191.80', 'planeta', 'dwpublica', 'publicarep', 5432);
 ```
 * Get the id from the connection inserted
 
@@ -36,10 +39,20 @@ VALUES
 
 * Create external table
 ```
-CREATE EXTERNAL WEB TABLE dweae.ext_test_vicente
+CREATE EXTERNAL WEB TABLE dweae.ext_test_vicente_azure
 (
   fax_id text
 )
  EXECUTE E'/home/gpadmin/external.sh CONNECTION_ID "select distinct id from fax"' ON MASTER 
  FORMAT 'text' (delimiter '|' null 'null' escape '\\') ENCODING 'UTF8';
 ```
+
+```
+CREATE EXTERNAL WEB TABLE dweae.ext_test_vicente_greenplum2
+(
+  dwc_id_usuario text
+)
+ EXECUTE E'/home/gpadmin/external.sh CONNECTION_ID "select dwc_id_usuario from publi_dwvdir.dwt_publicador_usuarios_acceso"' ON MASTER 
+ FORMAT 'text' (delimiter '|' null 'null' escape '\\') ENCODING 'UTF8';
+```
+
