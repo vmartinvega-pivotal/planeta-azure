@@ -12,9 +12,20 @@ public class App {
 	
 	private static final String AZURE = "azure";
 	private static final String GREENPLUM = "greenplum";
+	private static final int PARAMS_NUMBER = 7;
 
     public static void main(String[] args) {
+    	
+    	if (args.length != PARAMS_NUMBER) {
+    		System.err.println("ERROR. Number of parameters different from " + PARAMS_NUMBER);
+    		System.err.println("----------------");
+    		System.err.println("Params");
+    		System.err.println("hostname dbname user password sql driver port");
+    		System.err.println("----------------");
+    		System.exit(1);
+    	}
 
+    	// Read parameters
     	String hostName = args[0];
     	String dbName = args[1];
     	String user = args[2];
@@ -25,10 +36,13 @@ public class App {
         
         String url = null;
         if (driver.toLowerCase().equals(AZURE)) {
-        	url = String.format("jdbc:sqlserver://%s:1433;database=%s;user=%s;password=%s;encrypt=true;"
-                    + "hostNameInCertificate=*.database.windows.net;loginTimeout=30;", hostName, dbName, user, password);
+        	url = String.format("jdbc:sqlserver://%s:%s;database=%s;user=%s;password=%s;encrypt=true;"
+                    + "hostNameInCertificate=*.database.windows.net;loginTimeout=30;", hostName, port, dbName, user, password);
         }else if (driver.toLowerCase().equals(GREENPLUM)) {
         	url = String.format("jdbc:postgresql://%s:%s/%s", hostName, port, dbName);
+        }else {
+        	System.err.println("ERROR. The driver can only be " + AZURE + " or " + GREENPLUM);
+        	System.exit(1);
         }
 
         Connection connection = null;
@@ -86,6 +100,8 @@ public class App {
         }
         catch (Exception e) {
             e.printStackTrace();
+            System.err.println(e.toString());
+            System.exit(1);
         }finally {
         	if (connection != null) {
         		try {
