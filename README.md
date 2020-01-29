@@ -46,3 +46,13 @@ CREATE EXTERNAL WEB TABLE dweae.ext_test_vicente_azure
  EXECUTE E'/datos/carga/CTR/bin/external.sh CONNECTION_ID "select distinct id from fax"' ON MASTER 
  FORMAT 'text' (delimiter '|' null 'null' escape '\\') ENCODING 'UTF8';
 ```
+
+### Skew script
+
+Columns
+min. Mininum rows in a segment for a table
+max. Maximum rows in a segment for a table
+sum. Total rows for a table
+avg. Rows average in the segments
+median. Rows median in the segments
+percen. Percentage of rows that represent the difference between the maximum and minimum over the total

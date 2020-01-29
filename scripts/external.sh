@@ -1,10 +1,5 @@
 #!/bin/bash
 
-IN_CONNECTION_ID=$1
-IN_QUERY="$2"
-#LOG_MESSAGES="true"
-LOG_MESSAGES="false"
-
 function logMessage(){
         local IN_MESSAGE=$1
 
@@ -42,6 +37,18 @@ function toLowerCase() {
         echo "$1" | tr '[:upper:]' '[:lower:]'
 }
 
+# MAIN SCRIPT
+# Check Input parameters
+if [ "$#" -ne 2 ]; then
+    logMessageAndExist "Illegal number of parameters"
+    exit 1
+fi
+
+IN_CONNECTION_ID=$1
+IN_QUERY="$2"
+#LOG_MESSAGES="true"
+LOG_MESSAGES="false"
+
 TEMP_FILE="salida"
 removeTempFile $TEMP_FILE
 
@@ -73,10 +80,6 @@ INSTANCE=$(cat $TEMP_FILE | cut -d"|" -f4)
 INSTANCE=$(trim $INSTANCE)
 PORT=$(cat $TEMP_FILE | cut -d"|" -f5)
 PORT=$(trim $PORT)
-if [[ $CONNECTION_TYPE = "azure" ]]
-then
-        PORT="-1"
-fi
 DATABASE=$(cat $TEMP_FILE | cut -d"|" -f6)
 DATABASE=$(trim $DATABASE)
 USER=$(cat $TEMP_FILE | cut -d"|" -f7)
