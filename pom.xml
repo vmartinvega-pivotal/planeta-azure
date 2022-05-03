@@ -4,8 +4,8 @@
   <groupId>org.planeta</groupId>
   <artifactId>planeta-azure</artifactId>
   <packaging>jar</packaging>
-  <version>1.0.0</version>
-  <name>sqltest</name>
+  <version>2.0.0</version>
+  <name>planeta-azure</name>
   <url>http://maven.apache.org</url>
   <properties>
     <maven.compiler.source>1.8</maven.compiler.source>

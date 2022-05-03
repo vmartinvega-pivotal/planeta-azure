@@ -67,11 +67,11 @@ CONNECTION_TYPE=$(trim $CONNECTION_TYPE)
 # Checks the conneciton type
 #
 CONNECTION_TYPE=$(toLowerCase $CONNECTION_TYPE)
-if [[ $CONNECTION_TYPE = "azure" ]] || [[ $CONNECTION_TYPE = "greenplum" ]]
+if [[ $CONNECTION_TYPE = "azure" ]] || [[ $CONNECTION_TYPE = "greenplum" ]] || [[ $CONNECTION_TYPE = "mysql" ]]
 then
         logMessage "DEBUG: CONNECTION_TYPE: $CONNECTION_TYPE"
 else
-        logMessageAndExist "ERROR: The Connection Type: $CONNECTION_TYPE is not supported. Only azure or greenplum are supported. Existing..."
+        logMessageAndExist "ERROR: The Connection Type: $CONNECTION_TYPE is not supported. Only azure, mysql or greenplum are supported. Existing..."
 fi
 
 SERVER=$(cat $TEMP_FILE | cut -d"|" -f3)
@@ -94,7 +94,7 @@ logMessage "DEBUG: Pass:*****"
 logMessage "DEBUG: Port:$PORT"
 removeTempFile $TEMP_FILE
 
-java    -classpath /usr/local/os/jar/planeta-azure-1.0.0.jar:/usr/local/os/jar/mssql-jdbc-7.0.0.jre8.jar:/usr/local/os/jar/postgresql-42.2.9.jar \
+java    -classpath /usr/local/os/jar/planeta-azure-2.0.0.jar:/usr/local/os/jar/mssql-jdbc-7.0.0.jre8.jar:/usr/local/os/jar/postgresql-42.2.9.jar \
         -Xms128m \
         -Xmx256m \
         org.planeta.azure.App \

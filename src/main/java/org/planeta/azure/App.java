@@ -12,6 +12,8 @@ public class App {
 	
 	private static final String AZURE = "azure";
 	private static final String GREENPLUM = "greenplum";
+
+	private static final String MYSQL = "mysql";
 	private static final int PARAMS_NUMBER = 7;
 
     public static void main(String[] args) {
@@ -35,13 +37,17 @@ public class App {
         String port = args[6];
         
         String url = null;
-        if (driver.toLowerCase().equals(AZURE)) {
+        if (driver.equalsIgnoreCase(AZURE)) {
         	url = String.format("jdbc:sqlserver://%s:%s;database=%s;user=%s;password=%s;encrypt=true;"
                     + "hostNameInCertificate=*.database.windows.net;loginTimeout=30;", hostName, port, dbName, user, password);
-        }else if (driver.toLowerCase().equals(GREENPLUM)) {
+        }else if (driver.equalsIgnoreCase(MYSQL)) {
+			url = String.format("jdbc:mysql://%s:%s/%s", hostName, port, dbName);
+		}
+		else if (driver.equalsIgnoreCase(GREENPLUM)) {
         	url = String.format("jdbc:postgresql://%s:%s/%s", hostName, port, dbName);
         }else {
-        	System.err.println("ERROR. The driver can only be " + AZURE + " or " + GREENPLUM);
+			String sError = String.format("ERROR. The driver can only be %s, %s or %s", AZURE, GREENPLUM, MYSQL);
+        	System.err.println(sError);
         	System.exit(1);
         }
 
