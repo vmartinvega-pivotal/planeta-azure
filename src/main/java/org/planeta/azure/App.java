@@ -41,7 +41,7 @@ public class App {
         	url = String.format("jdbc:sqlserver://%s:%s;database=%s;user=%s;password=%s;encrypt=true;"
                     + "hostNameInCertificate=*.database.windows.net;loginTimeout=30;", hostName, port, dbName, user, password);
         }else if (driver.equalsIgnoreCase(MYSQL)) {
-			url = String.format("jdbc:mysql://%s:%s/%s", hostName, port, dbName);
+			url = String.format("jdbc:mysql://%s:%s/%s?user=%s&password=%s", hostName, port, dbName, user, password);
 		}
 		else if (driver.equalsIgnoreCase(GREENPLUM)) {
         	url = String.format("jdbc:postgresql://%s:%s/%s", hostName, port, dbName);

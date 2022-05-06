@@ -94,7 +94,7 @@ logMessage "DEBUG: Pass:*****"
 logMessage "DEBUG: Port:$PORT"
 removeTempFile $TEMP_FILE
 
-java    -classpath /usr/local/os/jar/planeta-azure-2.0.0.jar:/usr/local/os/jar/mssql-jdbc-7.0.0.jre8.jar:/usr/local/os/jar/postgresql-42.2.9.jar \
+java    -classpath /usr/local/os/jar/planeta-azure-2.0.0.jar:/usr/local/os/jar/mysql-connector-java.jar:/usr/local/os/jar/mssql-jdbc-7.0.0.jre8.jar:/usr/local/os/jar/postgresql-42.2.9.jar \
         -Xms128m \
         -Xmx256m \
         org.planeta.azure.App \
